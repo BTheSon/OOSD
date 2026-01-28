@@ -1,4 +1,4 @@
-package exercise.socketprograming;
+package exercise.socketprograming.singlethread;
 
 import java.io.IOException;
 import java.io.InputStream;
