@@ -1,4 +1,4 @@
-package vn.edu.qnu.simplechat.shared.pattern;
+package vn.edu.qnu.simplechat.shared.handler;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;

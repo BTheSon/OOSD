@@ -1,14 +1,19 @@
 package vn.edu.qnu.simplechat.client;
 
 import java.io.IOException;
-import  ocsf.client.*;
-import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
-import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
+import ocsf.client.*;
+import vn.edu.qnu.simplechat.client.Controller.HandleServerMessage;
+import vn.edu.qnu.simplechat.client.utils.Terminal;
+import vn.edu.qnu.simplechat.shared.handler.CommandRegistry;
+import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class Client extends AbstractClient {
 
+    private final CommandRegistry registry = new CommandRegistry();
+    private final Terminal terminal = Terminal.getInstance();
     public Client(String host, int port) {
         super(host, port);
+        registry.register(MessageFromServer.class, new HandleServerMessage(terminal));
     }
 
     @Override
@@ -37,20 +42,30 @@ public class Client extends AbstractClient {
         int port = 2357; // Example port, change if your server uses a different one
 
         Client client = new Client(host, port);
-
+        var terminal = client.terminal;
+        boolean isRunning = true;
         try {
             client.openConnection();
-            // Simulate some activity then close
-            Thread.sleep(2000); // Wait for 2 seconds
-            client.sendToServer("Hello Server!");
-            client.sendToServer(new LoginRequest("so"));
-            Thread.sleep(1000); // Wait for 1 second
-            client.closeConnection();
+            while (isRunning) {
+                String input = terminal.readLine("You: ");
+
+                if (input != null) {
+                    // Kiểm tra lệnh thoát
+                    if (input.equalsIgnoreCase("/exit")) {
+                        terminal.print("Đang thoát...", cli.Terminal.RED);
+                        isRunning = false;
+                    }
+
+                    // User dùng màu Xanh lá (GREEN) để phân biệt với Server
+                    terminal.print("Me: " + input, cli.Terminal.GREEN);
+                }
+            }
         } catch (IOException e) {
             System.err.println("Client failed to connect or communicate: " + e.getMessage());
-        } catch (InterruptedException e) {
-            System.err.println("Client interrupted: " + e.getMessage());
-            Thread.currentThread().interrupt();
+        }
+        finally {
+            client.closeConnection();
         }
     }
+
 }
