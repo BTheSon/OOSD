@@ -2,9 +2,9 @@ package vn.edu.qnu.simplechat.server;
 
 import  ocsf.server.*;
 import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryUserRepository;
-import vn.edu.qnu.simplechat.server.presentation.CommandRegistry;
-import vn.edu.qnu.simplechat.server.presentation.impl.CreateAccountCommand;
-import vn.edu.qnu.simplechat.server.presentation.impl.LoginCommand;
+import vn.edu.qnu.simplechat.shared.pattern.CommandRegistry;
+import vn.edu.qnu.simplechat.server.presentation.CreateAccountCommand;
+import vn.edu.qnu.simplechat.server.presentation.LoginCommand;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
 import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;

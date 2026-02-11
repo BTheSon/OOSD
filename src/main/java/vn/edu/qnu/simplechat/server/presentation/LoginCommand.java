@@ -1,8 +1,8 @@
-package vn.edu.qnu.simplechat.server.presentation.impl;
+package vn.edu.qnu.simplechat.server.presentation;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
-import vn.edu.qnu.simplechat.server.presentation.Command;
+import vn.edu.qnu.simplechat.shared.pattern.Command;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
 
