@@ -1,9 +1,12 @@
 package vn.edu.qnu.simplechat.server;
 
 import  ocsf.server.*;
+import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryUserRepository;
 import vn.edu.qnu.simplechat.server.presentation.CommandRegistry;
+import vn.edu.qnu.simplechat.server.presentation.impl.CreateAccountCommand;
 import vn.edu.qnu.simplechat.server.presentation.impl.LoginCommand;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
+import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
 
 import java.io.IOException;
@@ -14,7 +17,10 @@ public class Server extends AbstractServer {
 
     public Server(int port) {
         super(port);
-        registry.register(LoginRequest.class, new LoginCommand());
+        var userRepo = InMemoryUserRepository.getInstance();
+
+        registry.register(LoginRequest.class, new LoginCommand(userRepo));
+        registry.register(CreateAccountRequest.class, new CreateAccountCommand(userRepo));
     }
 
     @Override

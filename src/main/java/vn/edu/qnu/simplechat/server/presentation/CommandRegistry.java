@@ -21,7 +21,7 @@ public class CommandRegistry {
     public <T extends Packet> void dispatch(
             T packet,
             ConnectionToClient client
-    ) {
+    ) throws Exception {
         Command<T> cmd = (Command<T>) commands.get(packet.getClass());
         if (cmd != null) {
             cmd.execute(packet, client);

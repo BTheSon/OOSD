@@ -1,29 +1,28 @@
 package vn.edu.qnu.simplechat.server.presentation.impl;
 
 import ocsf.server.ConnectionToClient;
+import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
 import vn.edu.qnu.simplechat.server.presentation.Command;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
+import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
+
+import java.io.IOException;
 
 public class LoginCommand implements Command<LoginRequest> {
+    private final UserRepository userRepository;
+    public LoginCommand(UserRepository repository) {
+        this.userRepository = repository;
+    }
     @Override
-    public void execute(LoginRequest packet, ConnectionToClient client) {
-//        try {
-//            var repo = StorageContext.getInstance();
-//            synchronized (repo.users) {
-//                var isExistUser = repo.users
-//                        .stream()
-//                        .filter(u -> u.username().equals(packet.username()))
-//                        .findFirst()
-//                        .orElse(null) != null;
-//                if (!isExistUser) {
-//                    repo.users.add(new User(packet.username()));
-//                    client.sendToClient(new LoginResponse(true, "tạo người dùng thành công"));
-//                } else {
-//                    client.sendToClient(new LoginResponse(false, "người dùng đã tồn tại, vui lòng đăng kí"));
-//                }
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+    public void execute(LoginRequest packet, ConnectionToClient client) throws IOException {
+        var username = packet.username();
+        var existUser = userRepository.existsById(username);
+
+        if (existUser) {
+            client.setInfo("username", username);
+            client.sendToClient(new LoginResponse(true, "login success"));
+        }else {
+            client.sendToClient(new LoginResponse(false, "invalid username, pls create account"));
+        }
     }
 }
