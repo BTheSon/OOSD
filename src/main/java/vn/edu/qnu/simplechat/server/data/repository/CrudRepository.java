@@ -4,7 +4,7 @@ import java.util.*;
 
 public interface CrudRepository<ID, T> {
 
-    T save(T entity);
+    T save(T entity) throws IllegalStateException ;
 
     Optional<T> findById(ID id);
 

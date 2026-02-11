@@ -11,8 +11,11 @@ public abstract class InMemoryCrudRepository <ID, T> implements CrudRepository<I
     protected abstract ID getId(T entity);
 
     @Override
-    public T save(T entity) {
-        store.put(getId(entity), entity);
+    public T save(T entity) throws IllegalStateException {
+        var existing = store.putIfAbsent(this.getId(entity), entity);
+        if (existing != null) {
+            throw new IllegalStateException("Duplicate id: " + this.getId(entity));
+        }
         return entity;
     }
 
