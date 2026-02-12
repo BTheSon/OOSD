@@ -1,13 +1,13 @@
-package vn.edu.qnu.simplechat.server.presentation;
+package vn.edu.qnu.simplechat.server.presentation.impl;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.server.data.entity.User;
 import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
-import vn.edu.qnu.simplechat.shared.handler.Command;
+import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
-public class CreateAccountCommand implements Command<CreateAccountRequest> {
+public class CreateAccountCommand implements ServerCommand<CreateAccountRequest> {
     private UserRepository userRepo;
     public CreateAccountCommand(UserRepository repository) {
         this.userRepo = repository;

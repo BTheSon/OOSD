@@ -2,9 +2,9 @@ package vn.edu.qnu.simplechat.server;
 
 import  ocsf.server.*;
 import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryUserRepository;
-import vn.edu.qnu.simplechat.shared.handler.CommandRegistry;
-import vn.edu.qnu.simplechat.server.presentation.CreateAccountCommand;
-import vn.edu.qnu.simplechat.server.presentation.LoginCommand;
+import vn.edu.qnu.simplechat.server.presentation.ServerCommandRegistry;
+import vn.edu.qnu.simplechat.server.presentation.impl.CreateAccountCommand;
+import vn.edu.qnu.simplechat.server.presentation.impl.LoginCommand;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
 import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
@@ -13,14 +13,14 @@ import java.io.IOException;
 
 public class Server extends AbstractServer {
 
-    private final CommandRegistry registry = new CommandRegistry();
+    private final ServerCommandRegistry serverCommandRegistry = new ServerCommandRegistry();
 
     public Server(int port) {
         super(port);
         var userRepo = InMemoryUserRepository.getInstance();
 
-        registry.register(LoginRequest.class, new LoginCommand(userRepo));
-        registry.register(CreateAccountRequest.class, new CreateAccountCommand(userRepo));
+        serverCommandRegistry.register(LoginRequest.class, new LoginCommand(userRepo));
+        serverCommandRegistry.register(CreateAccountRequest.class, new CreateAccountCommand(userRepo));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Server extends AbstractServer {
             if (msg instanceof String m) {
                 client.sendToClient(m);
             } else if (msg instanceof Packet packet) {
-                registry.dispatch(packet, client);
+                serverCommandRegistry.dispatch(packet, client);
             } else {
                 throw new Exception("khong xac dinh kieu cua goi tin");
             }

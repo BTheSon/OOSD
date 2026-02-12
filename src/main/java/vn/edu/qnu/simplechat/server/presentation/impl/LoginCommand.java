@@ -1,14 +1,14 @@
-package vn.edu.qnu.simplechat.server.presentation;
+package vn.edu.qnu.simplechat.server.presentation.impl;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
-import vn.edu.qnu.simplechat.shared.handler.Command;
+import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
 
 import java.io.IOException;
 
-public class LoginCommand implements Command<LoginRequest> {
+public class LoginCommand implements ServerCommand<LoginRequest> {
     private final UserRepository userRepository;
     public LoginCommand(UserRepository repository) {
         this.userRepository = repository;

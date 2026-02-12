@@ -1,4 +1,4 @@
-package vn.edu.qnu.simplechat.shared.handler;
+package vn.edu.qnu.simplechat.server.presentation;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
@@ -6,13 +6,13 @@ import vn.edu.qnu.simplechat.shared.protocol.Packet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandRegistry {
+public class ServerCommandRegistry {
 
-    private final Map<Class<?>, Command<?>> commands = new HashMap<>();
+    private final Map<Class<?>, ServerCommand<?>> commands = new HashMap<>();
 
     public <T extends Packet> void register(
             Class<T> type,
-            Command<T> command
+            ServerCommand<T> command
     ) {
         commands.put(type, command);
     }
@@ -22,7 +22,7 @@ public class CommandRegistry {
             T packet,
             ConnectionToClient client
     ) throws Exception {
-        Command<T> cmd = (Command<T>) commands.get(packet.getClass());
+        ServerCommand<T> cmd = (ServerCommand<T>) commands.get(packet.getClass());
         if (cmd != null) {
             cmd.execute(packet, client);
         }

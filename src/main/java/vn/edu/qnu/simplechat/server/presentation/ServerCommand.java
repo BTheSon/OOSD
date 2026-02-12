@@ -1,8 +1,8 @@
-package vn.edu.qnu.simplechat.shared.handler;
+package vn.edu.qnu.simplechat.server.presentation;
 
 import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
 
-public interface Command <T extends Packet> {
+public interface ServerCommand <T extends Packet> {
     void execute(T packet, ConnectionToClient client) throws Exception;
 }
