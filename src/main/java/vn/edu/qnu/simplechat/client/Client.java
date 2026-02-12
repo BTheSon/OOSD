@@ -1,24 +1,41 @@
 package vn.edu.qnu.simplechat.client;
 
-import java.io.IOException;
 import ocsf.client.*;
-import vn.edu.qnu.simplechat.client.Controller.HandleServerMessage;
+import vn.edu.qnu.simplechat.client.handler.ClientCommandRegistry;
+import vn.edu.qnu.simplechat.client.handler.impl.LoginHandle;
+import vn.edu.qnu.simplechat.client.handler.impl.RegisterHandle;
+import vn.edu.qnu.simplechat.client.handler.HandleLogin;
+import vn.edu.qnu.simplechat.client.handler.HandleServerMessage;
 import vn.edu.qnu.simplechat.client.utils.Terminal;
-import vn.edu.qnu.simplechat.shared.handler.CommandRegistry;
+import vn.edu.qnu.simplechat.shared.protocol.Packet;
+import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
+import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class Client extends AbstractClient {
 
-    private final CommandRegistry registry = new CommandRegistry();
-    private final Terminal terminal = Terminal.getInstance();
+    public final ClientCommandRegistry clientCommandRegistry = new ClientCommandRegistry();
+    public final Terminal terminal = Terminal.getInstance();
     public Client(String host, int port) {
+
         super(host, port);
-        registry.register(MessageFromServer.class, new HandleServerMessage(terminal));
+        clientCommandRegistry.register(LoginResponse.class, new LoginHandle(terminal));
+        clientCommandRegistry.register(CreateAccountRequest.class, new RegisterHandle(this));
     }
 
     @Override
     protected void handleMessageFromServer(Object msg) {
-        System.out.println("Message from server: " + msg);
+        try {
+            if (msg instanceof String m) {
+                terminal.print("[Server] : " + m);
+            } else if (msg instanceof Packet packet) {
+                clientCommandRegistry.dispatch(packet);
+            } else {
+                throw new Exception("khong xac dinh kieu cua goi tin");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -36,36 +53,4 @@ public class Client extends AbstractClient {
     protected void connectionEstablished() {
         System.out.println("Connection to server established.");
     }
-
-    public static void main(String[] args) throws IOException {
-        String host = "localhost";
-        int port = 2357; // Example port, change if your server uses a different one
-
-        Client client = new Client(host, port);
-        var terminal = client.terminal;
-        boolean isRunning = true;
-        try {
-            client.openConnection();
-            while (isRunning) {
-                String input = terminal.readLine("You: ");
-
-                if (input != null) {
-                    // Kiểm tra lệnh thoát
-                    if (input.equalsIgnoreCase("/exit")) {
-                        terminal.print("Đang thoát...", cli.Terminal.RED);
-                        isRunning = false;
-                    }
-
-                    // User dùng màu Xanh lá (GREEN) để phân biệt với Server
-                    terminal.print("Me: " + input, cli.Terminal.GREEN);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Client failed to connect or communicate: " + e.getMessage());
-        }
-        finally {
-            client.closeConnection();
-        }
-    }
-
 }
