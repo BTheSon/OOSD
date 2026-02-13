@@ -1,5 +1,8 @@
 package vn.edu.qnu.simplechat.client.ui;
 
+import ocsf.client.AbstractClient;
+import vn.edu.qnu.simplechat.client.ui.impl.UnknownAction;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,14 +13,8 @@ public class InputRouter {
         routes.put(key, action);
     }
 
-    public void route(String input) throws Exception {
-        String key = input.split(" ")[0];
-
-        Action action = routes.get(key);
-        if (action == null) {
-            throw new IllegalArgumentException("Unknown action");
-        }
-
-        action.execute(input);
+    public ActionSignal route(String route, String input, AbstractClient client) throws  Exception {
+        Action action = routes.getOrDefault(route, new UnknownAction());
+        return action.execute(input, client);
     }
 }

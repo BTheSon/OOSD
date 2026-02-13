@@ -4,10 +4,10 @@ import ocsf.client.AbstractClient;
 import vn.edu.qnu.simplechat.client.ui.Action;
 import vn.edu.qnu.simplechat.client.ui.ActionSignal;
 
-public class JoinRoomAction  implements Action {
-
+public class SendMessageHandle implements Action {
     @Override
     public ActionSignal execute(String input, AbstractClient client) throws Exception {
-        return ActionSignal.NONE;
+        client.sendToServer(input);
+        return ActionSignal.SUCCESS;
     }
 }

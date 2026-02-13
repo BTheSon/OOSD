@@ -1,5 +1,7 @@
 package vn.edu.qnu.simplechat.client.ui;
 
+import ocsf.client.AbstractClient;
+
 public interface Action {
-    void execute(String input) throws  Exception;
+    ActionSignal execute(String input, AbstractClient client) throws  Exception;
 }

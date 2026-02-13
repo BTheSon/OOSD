@@ -1,10 +1,12 @@
 package vn.edu.qnu.simplechat.client.ui.impl;
 
+import ocsf.client.AbstractClient;
 import vn.edu.qnu.simplechat.client.ui.Action;
+import vn.edu.qnu.simplechat.client.ui.ActionSignal;
 
 public class CreateAccAction implements Action {
     @Override
-    public void execute(String input) throws Exception {
-
+    public ActionSignal execute(String input, AbstractClient client) throws Exception {
+        return ActionSignal.NONE;
     }
 }
