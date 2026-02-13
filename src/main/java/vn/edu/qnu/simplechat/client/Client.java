@@ -3,9 +3,7 @@ package vn.edu.qnu.simplechat.client;
 import ocsf.client.*;
 import vn.edu.qnu.simplechat.client.handler.ClientCommandRegistry;
 import vn.edu.qnu.simplechat.client.handler.impl.LoginHandle;
-import vn.edu.qnu.simplechat.client.handler.impl.RegisterHandle;
-import vn.edu.qnu.simplechat.client.handler.HandleLogin;
-import vn.edu.qnu.simplechat.client.handler.HandleServerMessage;
+import vn.edu.qnu.simplechat.client.handler.impl.MessageServerHandle;
 import vn.edu.qnu.simplechat.client.utils.Terminal;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
 import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
@@ -14,13 +12,13 @@ import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class Client extends AbstractClient {
 
-    public final ClientCommandRegistry clientCommandRegistry = new ClientCommandRegistry();
-    public final Terminal terminal = Terminal.getInstance();
+    private final ClientCommandRegistry clientCommandRegistry = new ClientCommandRegistry();
+    private final Terminal terminal;
     public Client(String host, int port) {
-
         super(host, port);
-        clientCommandRegistry.register(LoginResponse.class, new LoginHandle(terminal));
-        clientCommandRegistry.register(CreateAccountRequest.class, new RegisterHandle(this));
+        terminal = Terminal.getInstance();
+        clientCommandRegistry.register(LoginResponse.class, new LoginHandle());
+        clientCommandRegistry.register(MessageFromServer.class, new MessageServerHandle());
     }
 
     @Override
@@ -29,7 +27,7 @@ public class Client extends AbstractClient {
             if (msg instanceof String m) {
                 terminal.print("[Server] : " + m);
             } else if (msg instanceof Packet packet) {
-                clientCommandRegistry.dispatch(packet);
+                clientCommandRegistry.dispatch(packet, this);
             } else {
                 throw new Exception("khong xac dinh kieu cua goi tin");
             }

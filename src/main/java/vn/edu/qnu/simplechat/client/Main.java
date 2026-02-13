@@ -1,9 +1,10 @@
 package vn.edu.qnu.simplechat.client;
 
-import vn.edu.qnu.simplechat.client.handler.impl.LoginHandle;
-import vn.edu.qnu.simplechat.client.handler.impl.RegisterHandle;
-import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
-import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
+import vn.edu.qnu.simplechat.client.ui.ActionSignal;
+import vn.edu.qnu.simplechat.client.ui.InputRouter;
+import vn.edu.qnu.simplechat.client.ui.impl.*;
+import vn.edu.qnu.simplechat.client.utils.InputParser;
+import vn.edu.qnu.simplechat.client.utils.Terminal;
 
 import java.io.IOException;
 
@@ -13,34 +14,39 @@ public class Main {
         int port = 2357; // Example port, change if your server uses a different one
 
         Client client = new Client(host, port);
-        client.clientCommandRegistry.register(LoginRequest.class, new LoginHandle(client));
-        // Register CreateAccountRequest with a RegisterCommand. The RegisterCommand will handle sending the request.
-        client.clientCommandRegistry.register(CreateAccountRequest.class, new RegisterHandle(client));
+        Terminal terminal = Terminal.getInstance();
+        InputRouter inputRouter = new InputRouter();
 
+        // đăng kí hành dộng theo input
+        inputRouter.register("send-msg", new SendMessageHandle());
+        inputRouter.register("login", new LoginAction());
+        inputRouter.register("exit", new ExitAction());
+        inputRouter.register("new-acc", new CreateAccAction());
+        inputRouter.register("create", new CreateRoomAction());
+        inputRouter.register("join", new JoinRoomAction());
 
-        var terminal = client.terminal;
         boolean isRunning = true;
         try {
             client.openConnection();
             while (isRunning) {
                 String input = terminal.readLine("You: ");
+                var inputParserResult = InputParser.parse(input);
 
-                if (input != null) {
-                    if (input.equalsIgnoreCase("/exit")) {
-                        terminal.print("Đang thoát...", cli.Terminal.RED);
-                        isRunning = false;
-                    } else if (input.startsWith("/login ")) {
-                        String username = input.substring("/login ".length());
-                        LoginRequest loginRequest = new LoginRequest(username);
-                        client.clientCommandRegistry.dispatch(loginRequest);
-                    } else if (input.startsWith("/register ")) {
-                        String username = input.substring("/register ".length());
-                        CreateAccountRequest createAccountRequest = new CreateAccountRequest(username);
-                        client.clientCommandRegistry.dispatch(createAccountRequest);
-                    } else {
-                        client.sendToServer(input);
-                    }
+                // nếu k phải lệnh thì chuỷen sang gửi tn
+                if (!inputParserResult.isCommand()) {
+                    var msg = inputParserResult.getMessage();
+                    ActionSignal result = inputRouter.route("send-msg", msg, client);
+                    continue;
                 }
+
+                var command = inputParserResult.getCommand();
+                var agrs = inputParserResult.getArgs();
+                ActionSignal result = inputRouter.route(command, agrs, client);
+
+                if (result == ActionSignal.EXIT) {
+                    isRunning = false;
+                }
+
             }
         } catch (Exception e) { // Changed to generic Exception to catch dispatch exceptions
             System.err.println("Client failed to connect or communicate: " + e.getMessage());

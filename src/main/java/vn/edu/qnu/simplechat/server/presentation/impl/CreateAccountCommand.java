@@ -14,9 +14,15 @@ public class CreateAccountCommand implements ServerCommand<CreateAccountRequest>
     }
     @Override
     public void execute(CreateAccountRequest packet, ConnectionToClient client) throws Exception {
+
         var username = packet.username();
         var newUser = new User(username);
         try {
+            if (username.isBlank()) {
+                client.sendToClient(new MessageFromServer("The username must contain a character."));
+                return;
+            }
+
             var result = userRepo.save(newUser);
             client.sendToClient(new MessageFromServer("User created successfully, please log in."));
         } catch (IllegalStateException e){
