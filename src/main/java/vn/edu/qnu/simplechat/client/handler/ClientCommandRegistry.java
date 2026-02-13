@@ -1,5 +1,6 @@
 package vn.edu.qnu.simplechat.client.handler;
 
+import ocsf.client.AbstractClient;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
 
 import java.util.HashMap;
@@ -18,11 +19,12 @@ public class ClientCommandRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends Packet> void dispatch(
-            T packet
+            T packet,
+            AbstractClient client
     ) throws Exception {
         Command<T> cmd = (Command<T>) commands.get(packet.getClass());
         if (cmd != null) {
-            cmd.execute(packet);
+            cmd.execute(packet, client);
         }
     }
 }
