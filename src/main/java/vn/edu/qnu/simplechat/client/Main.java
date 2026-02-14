@@ -9,6 +9,28 @@ import vn.edu.qnu.simplechat.client.utils.Terminal;
 import java.io.IOException;
 
 public class Main {
+    public static void logHelp(Terminal terminal) {
+        terminal.print("""
+==================== AVAILABLE COMMANDS ====================
+
+login <username>
+    -> dang nhap he thong
+
+new-acc <username>
+    -> tao acc moi
+
+create <room-name>
+    -> tao phong chat moi
+
+join <room-id>
+    -> tham gia phong chat theo id
+
+exit
+    -> thoat app
+
+============================================================
+""");
+    }
     public static void main(String[] args) throws IOException {
         String host = "localhost";
         int port = 2357; // Example port, change if your server uses a different one
@@ -18,13 +40,13 @@ public class Main {
         InputRouter inputRouter = new InputRouter();
 
         // đăng kí hành dộng theo input
-        inputRouter.register("send-msg", new SendMessageHandle());
+        inputRouter.register("send-msg", new SendMessageAction());
         inputRouter.register("login", new LoginAction());
         inputRouter.register("exit", new ExitAction());
         inputRouter.register("new-acc", new CreateAccAction());
         inputRouter.register("create", new CreateRoomAction());
         inputRouter.register("join", new JoinRoomAction());
-
+        logHelp(terminal);
         boolean isRunning = true;
         try {
             client.openConnection();
