@@ -1,4 +1,4 @@
-package vn.edu.qnu.simplechat.client.utils;
+package vn.edu.qnu.simplechat.client.ui;
 
 import java.util.Scanner;
 

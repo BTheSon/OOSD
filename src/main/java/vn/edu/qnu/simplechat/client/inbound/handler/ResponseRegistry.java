@@ -1,4 +1,4 @@
-package vn.edu.qnu.simplechat.client.handler;
+package vn.edu.qnu.simplechat.client.inbound.handler;
 
 import ocsf.client.AbstractClient;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
@@ -6,15 +6,15 @@ import vn.edu.qnu.simplechat.shared.protocol.Packet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientCommandRegistry {
+public class ResponseRegistry {
 
-    private final Map<Class<?>, Command<?>> commands = new HashMap<>();
+    private final Map<Class<?>, ResponseHandler<?>> commands = new HashMap<>();
 
     public <T extends Packet> void register(
             Class<T> type,
-            Command<T> command
+            ResponseHandler<T> responseHandler
     ) {
-        commands.put(type, command);
+        commands.put(type, responseHandler);
     }
 
     @SuppressWarnings("unchecked")
@@ -22,7 +22,7 @@ public class ClientCommandRegistry {
             T packet,
             AbstractClient client
     ) throws Exception {
-        Command<T> cmd = (Command<T>) commands.get(packet.getClass());
+        ResponseHandler<T> cmd = (ResponseHandler<T>) commands.get(packet.getClass());
         if (cmd != null) {
             cmd.execute(packet, client);
         }

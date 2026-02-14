@@ -1,20 +1,19 @@
 package vn.edu.qnu.simplechat.client;
 
 import ocsf.client.*;
-import vn.edu.qnu.simplechat.client.handler.ClientCommandRegistry;
-import vn.edu.qnu.simplechat.client.handler.impl.ChatMessageHandle;
-import vn.edu.qnu.simplechat.client.handler.impl.LoginHandle;
-import vn.edu.qnu.simplechat.client.handler.impl.MessageServerHandle;
-import vn.edu.qnu.simplechat.client.utils.Terminal;
+import vn.edu.qnu.simplechat.client.inbound.handler.ResponseRegistry;
+import vn.edu.qnu.simplechat.client.inbound.handler.impl.ChatMessageHandle;
+import vn.edu.qnu.simplechat.client.inbound.handler.impl.LoginHandle;
+import vn.edu.qnu.simplechat.client.inbound.handler.impl.MessageServerHandle;
+import vn.edu.qnu.simplechat.client.ui.Terminal;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
-import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.ChatMessageResponse;
 import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class Client extends AbstractClient {
 
-    private final ClientCommandRegistry clientCommandRegistry = new ClientCommandRegistry();
+    private final ResponseRegistry clientCommandRegistry = new ResponseRegistry();
     private final Terminal terminal;
     public Client(String host, int port) {
         super(host, port);

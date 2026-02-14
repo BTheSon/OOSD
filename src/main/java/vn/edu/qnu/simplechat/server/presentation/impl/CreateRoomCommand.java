@@ -1,8 +1,6 @@
 package vn.edu.qnu.simplechat.server.presentation.impl;
 
-import ocsf.client.AbstractClient;
 import ocsf.server.ConnectionToClient;
-import vn.edu.qnu.simplechat.client.handler.Command;
 import vn.edu.qnu.simplechat.server.data.entity.Room;
 import vn.edu.qnu.simplechat.server.data.repository.RoomRepository;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommand;

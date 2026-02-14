@@ -1,4 +1,4 @@
-package vn.edu.qnu.simplechat.client.ui;
+package vn.edu.qnu.simplechat.client.application.action;
 
 public enum ActionSignal {
     EXIT,

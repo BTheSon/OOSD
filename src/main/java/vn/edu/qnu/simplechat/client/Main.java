@@ -1,35 +1,36 @@
 package vn.edu.qnu.simplechat.client;
 
-import vn.edu.qnu.simplechat.client.ui.ActionSignal;
-import vn.edu.qnu.simplechat.client.ui.InputRouter;
-import vn.edu.qnu.simplechat.client.ui.impl.*;
+import vn.edu.qnu.simplechat.client.application.action.*;
+import vn.edu.qnu.simplechat.client.application.action.impl.*;
+import vn.edu.qnu.simplechat.client.application.routing.InputRouter;
+import vn.edu.qnu.simplechat.client.ui.View;
 import vn.edu.qnu.simplechat.client.utils.InputParser;
-import vn.edu.qnu.simplechat.client.utils.Terminal;
+import vn.edu.qnu.simplechat.client.ui.Terminal;
 
 import java.io.IOException;
 
 public class Main {
     public static void logHelp(Terminal terminal) {
-        terminal.print("""
-==================== AVAILABLE COMMANDS ====================
+        View.systemLog("""
+                ==================== AVAILABLE COMMANDS ====================
 
-login <username>
-    -> dang nhap he thong
+                login <username>
+                    -> dang nhap he thong
 
-new-acc <username>
-    -> tao acc moi
+                new-acc <username>
+                    -> tao acc moi
 
-create <room-name>
-    -> tao phong chat moi
+                create <room-name>
+                    -> tao phong chat moi
 
-join <room-id>
-    -> tham gia phong chat theo id
+                join <room-id>
+                    -> tham gia phong chat theo id
 
-exit
-    -> thoat app
+                exit
+                    -> thoat app
 
-============================================================
-""");
+                ============================================================
+                """);
     }
     public static void main(String[] args) throws IOException {
         String host = "localhost";
@@ -46,7 +47,9 @@ exit
         inputRouter.register("new-acc", new CreateAccAction());
         inputRouter.register("create", new CreateRoomAction());
         inputRouter.register("join", new JoinRoomAction());
+
         logHelp(terminal);
+
         boolean isRunning = true;
         try {
             client.openConnection();
@@ -68,10 +71,9 @@ exit
                 if (result == ActionSignal.EXIT) {
                     isRunning = false;
                 }
-
             }
         } catch (Exception e) { // Changed to generic Exception to catch dispatch exceptions
-            System.err.println("Client failed to connect or communicate: " + e.getMessage());
+            View.systemLog(e.getMessage());
         }
         finally {
             client.closeConnection();

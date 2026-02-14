@@ -1,7 +1,9 @@
-package vn.edu.qnu.simplechat.client.ui;
+package vn.edu.qnu.simplechat.client.application.routing;
 
 import ocsf.client.AbstractClient;
-import vn.edu.qnu.simplechat.client.ui.impl.UnknownAction;
+import vn.edu.qnu.simplechat.client.application.action.Action;
+import vn.edu.qnu.simplechat.client.application.action.ActionSignal;
+import vn.edu.qnu.simplechat.client.application.action.impl.UnknownAction;
 
 import java.util.HashMap;
 import java.util.Map;
