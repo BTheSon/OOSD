@@ -6,6 +6,8 @@ import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
 public class InMemoryUserRepository extends InMemoryCrudRepository <String, User> implements UserRepository {
     private static final InMemoryUserRepository instance = new InMemoryUserRepository();
 
+    private InMemoryUserRepository(){}
+
     public static InMemoryUserRepository getInstance() {
         return instance;
     }
