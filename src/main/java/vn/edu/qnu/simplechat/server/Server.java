@@ -21,8 +21,8 @@ public class Server extends AbstractServer {
 
         serverCommandRegistry.register(LoginRequest.class,          new LoginCommand(userRepo));
         serverCommandRegistry.register(CreateAccountRequest.class,  new CreateAccountCommand(userRepo));
-        serverCommandRegistry.register(CreateRoomRequest.class,     new CreateRoomCommand(roomRepo));
-        serverCommandRegistry.register(JoinRoomRequest.class,       new JoinRoomCommand(roomConnectionRegistry));
+        serverCommandRegistry.register(CreateRoomRequest.class,     new CreateRoomCommand(roomConnectionRegistry,roomRepo));
+        serverCommandRegistry.register(JoinRoomRequest.class,       new JoinRoomCommand(roomConnectionRegistry, roomRepo));
         serverCommandRegistry.register(SendMessageRequest.class,       new SendMessageCommand(roomConnectionRegistry));
 
     }

@@ -17,7 +17,7 @@ public class InMemoryRoomRepository extends InMemoryCrudRepository<String, Room>
     }
 
     @Override
-    public void addMenber(String roomId, String username) {
+    public void addMenber(String roomId, String username) throws RuntimeException{
         Room room = this.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room không tồn tại"));
 

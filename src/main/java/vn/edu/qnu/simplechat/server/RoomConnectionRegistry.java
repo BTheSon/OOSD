@@ -65,7 +65,12 @@ public class RoomConnectionRegistry {
     public String getRoomOf(ConnectionToClient client) {
         return (String) client.getInfo("roomId");
     }
+
     public Set<ConnectionToClient> getConnectionByRoomId(String roomId) {
         return rooms.get(roomId);
+    }
+
+    public boolean exists(String roomId) {
+        return rooms.containsKey(roomId);
     }
 }

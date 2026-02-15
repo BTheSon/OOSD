@@ -5,6 +5,7 @@ import vn.edu.qnu.simplechat.server.RoomConnectionRegistry;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.SendMessageRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.ChatMessageResponse;
+import vn.edu.qnu.simplechat.shared.protocol.response.ErrorMessage;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class SendMessageCommand implements ServerCommand<SendMessageRequest> {
@@ -18,7 +19,7 @@ public class SendMessageCommand implements ServerCommand<SendMessageRequest> {
 
         String username = (String) client.getInfo("username");
         if (username == null) {
-            client.sendToClient(new MessageFromServer("Not logged in. Please log in first."));
+            client.sendToClient(new ErrorMessage("Not logged in. Please log in first."));
             return;
         }
 
@@ -30,7 +31,7 @@ public class SendMessageCommand implements ServerCommand<SendMessageRequest> {
 
         var connections = roomConnectionRegistry.getConnectionByRoomId(roomId);
         if (connections == null || connections.isEmpty()) {
-            client.sendToClient(new MessageFromServer("Room does not exist or has no members."));
+            client.sendToClient(new ErrorMessage("Room does not exist or has no members."));
             return;
         }
 
