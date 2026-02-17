@@ -19,6 +19,15 @@ public abstract class InMemoryCrudRepository <ID, T> implements CrudRepository<I
         return entity;
     }
 
+    public T update(ID id, T entity) throws IllegalStateException{
+        if (!store.containsKey(id)) {
+            throw new RuntimeException("Không tồn tại id: " + id);
+        }
+        store.put(id, entity);
+        return entity;
+    }
+
+
     @Override
     public Optional<T> findById(ID id) {
         return Optional.ofNullable(store.get(id));

@@ -1,26 +1,30 @@
 package vn.edu.qnu.simplechat.server;
 
 import  ocsf.server.*;
+import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryRoomRepository;
 import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryUserRepository;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommandRegistry;
-import vn.edu.qnu.simplechat.server.presentation.impl.CreateAccountCommand;
-import vn.edu.qnu.simplechat.server.presentation.impl.LoginCommand;
+import vn.edu.qnu.simplechat.server.presentation.impl.*;
 import vn.edu.qnu.simplechat.shared.protocol.Packet;
-import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
-import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
+import vn.edu.qnu.simplechat.shared.protocol.request.*;
 
 import java.io.IOException;
 
 public class Server extends AbstractServer {
 
     private final ServerCommandRegistry serverCommandRegistry = new ServerCommandRegistry();
-
+    private final RoomConnectionRegistry roomConnectionRegistry = new RoomConnectionRegistry();
     public Server(int port) {
         super(port);
         var userRepo = InMemoryUserRepository.getInstance();
+        var roomRepo = InMemoryRoomRepository.getInstance();
 
-        serverCommandRegistry.register(LoginRequest.class, new LoginCommand(userRepo));
-        serverCommandRegistry.register(CreateAccountRequest.class, new CreateAccountCommand(userRepo));
+        serverCommandRegistry.register(LoginRequest.class,          new LoginCommand(userRepo));
+        serverCommandRegistry.register(CreateAccountRequest.class,  new CreateAccountCommand(userRepo));
+        serverCommandRegistry.register(CreateRoomRequest.class,     new CreateRoomCommand(roomConnectionRegistry,roomRepo));
+        serverCommandRegistry.register(JoinRoomRequest.class,       new JoinRoomCommand(roomConnectionRegistry, roomRepo));
+        serverCommandRegistry.register(SendMessageRequest.class,    new SendMessageCommand(roomConnectionRegistry, roomRepo));
+
     }
 
     @Override
@@ -40,11 +44,14 @@ public class Server extends AbstractServer {
 
     @Override
     synchronized protected void clientConnected(ConnectionToClient client) {
-        System.out.println("new client has connected");
+        System.out.println("new client has connected " + client.toString());
     }
+
+    // phế vãi linh hồn disconnect nhưng client away null????
     @Override
     synchronized protected void clientDisconnected( ConnectionToClient client) {
         super.clientDisconnected(client);
+        roomConnectionRegistry.removeClientFromAllRooms(client);
         System.out.println("Disconection: " + client.toString());
     }
 
