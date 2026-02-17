@@ -6,6 +6,7 @@ import vn.edu.qnu.simplechat.server.data.repository.impl.InMemoryRoomRepository;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.JoinRoomRequest;
 import vn.edu.qnu.simplechat.shared.protocol.response.ErrorMessage;
+import vn.edu.qnu.simplechat.shared.protocol.response.ListMessageRes;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class JoinRoomCommand implements ServerCommand<JoinRoomRequest> {
@@ -42,16 +43,22 @@ public class JoinRoomCommand implements ServerCommand<JoinRoomRequest> {
         }
 
         roomConnectionRegistry.joinRoom(roomId, client);
-//
-//        try {
-//            roomRepo.addMenber(roomId, rawwUsername.toString());
-//        } catch (RuntimeException e) {
-//            client.sendToClient(new ErrorMessage(""));
-//        }
+
+        try {
+            roomRepo.addMember(roomId, rawwUsername.toString());
+        } catch (RuntimeException e) {
+            client.sendToClient(new ErrorMessage(e.getMessage()));
+            return;
+        }
+
+        var room  = roomRepo.findById(roomId).orElse(null);
+        if (room == null) {
+            client.sendToClient(new ErrorMessage("Room dont exist in repo"));
+            return;
+        }
 
         client.setInfo("roomId", roomId);
-        client.sendToClient("Successfully entered the room.");
-
-
+        client.sendToClient(new MessageFromServer("Enter room %s successfully".formatted(roomId)));
+        client.sendToClient(new ListMessageRes(room.messageList()));
     }
 }

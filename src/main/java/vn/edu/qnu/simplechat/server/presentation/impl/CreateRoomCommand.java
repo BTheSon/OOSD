@@ -36,7 +36,10 @@ public class CreateRoomCommand implements ServerCommand<CreateRoomRequest> {
                 return;
             }
 
-            var newRoom = new Room(packet.roomId(), new HashSet<>());
+            String username = (String) client.getInfo("username");
+
+            var newRoom = new Room(packet.roomId());
+            newRoom.addMember(username);
 
             roomRepository.save(newRoom);
             roomConnectionRegistry.joinRoom(newRoom.roomId(), client);

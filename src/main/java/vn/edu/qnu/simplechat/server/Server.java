@@ -23,7 +23,7 @@ public class Server extends AbstractServer {
         serverCommandRegistry.register(CreateAccountRequest.class,  new CreateAccountCommand(userRepo));
         serverCommandRegistry.register(CreateRoomRequest.class,     new CreateRoomCommand(roomConnectionRegistry,roomRepo));
         serverCommandRegistry.register(JoinRoomRequest.class,       new JoinRoomCommand(roomConnectionRegistry, roomRepo));
-        serverCommandRegistry.register(SendMessageRequest.class,       new SendMessageCommand(roomConnectionRegistry));
+        serverCommandRegistry.register(SendMessageRequest.class,    new SendMessageCommand(roomConnectionRegistry, roomRepo));
 
     }
 
@@ -46,6 +46,8 @@ public class Server extends AbstractServer {
     synchronized protected void clientConnected(ConnectionToClient client) {
         System.out.println("new client has connected " + client.toString());
     }
+
+    // phế vãi linh hồn disconnect nhưng client away null????
     @Override
     synchronized protected void clientDisconnected( ConnectionToClient client) {
         super.clientDisconnected(client);
