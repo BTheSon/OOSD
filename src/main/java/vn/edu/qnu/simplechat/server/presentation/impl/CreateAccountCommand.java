@@ -5,6 +5,7 @@ import vn.edu.qnu.simplechat.server.data.entity.User;
 import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.CreateAccountRequest;
+import vn.edu.qnu.simplechat.shared.protocol.response.ErrorMessage;
 import vn.edu.qnu.simplechat.shared.protocol.response.MessageFromServer;
 
 public class CreateAccountCommand implements ServerCommand<CreateAccountRequest> {
@@ -14,13 +15,19 @@ public class CreateAccountCommand implements ServerCommand<CreateAccountRequest>
     }
     @Override
     public void execute(CreateAccountRequest packet, ConnectionToClient client) throws Exception {
+
         var username = packet.username();
         var newUser = new User(username);
         try {
+            if (username.isBlank()) {
+                client.sendToClient(new ErrorMessage("The username must contain a character."));
+                return;
+            }
+
             var result = userRepo.save(newUser);
             client.sendToClient(new MessageFromServer("User created successfully, please log in."));
         } catch (IllegalStateException e){
-            client.sendToClient(new MessageFromServer("The username already exists, try a different one."));
+            client.sendToClient(new ErrorMessage("The username already exists, try a different one."));
         }
     }
 }

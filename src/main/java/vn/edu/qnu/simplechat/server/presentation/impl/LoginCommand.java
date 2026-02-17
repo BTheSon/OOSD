@@ -4,6 +4,7 @@ import ocsf.server.ConnectionToClient;
 import vn.edu.qnu.simplechat.server.data.repository.UserRepository;
 import vn.edu.qnu.simplechat.server.presentation.ServerCommand;
 import vn.edu.qnu.simplechat.shared.protocol.request.LoginRequest;
+import vn.edu.qnu.simplechat.shared.protocol.response.ErrorMessage;
 import vn.edu.qnu.simplechat.shared.protocol.response.LoginResponse;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class LoginCommand implements ServerCommand<LoginRequest> {
             client.setInfo("username", username);
             client.sendToClient(new LoginResponse(true, "login success"));
         }else {
-            client.sendToClient(new LoginResponse(false, "invalid username, pls create account"));
+            client.sendToClient(new ErrorMessage("invalid username, pls create account"));
         }
     }
 }
