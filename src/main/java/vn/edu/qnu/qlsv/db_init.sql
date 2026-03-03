@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS qlsv_db;
+USE qlsv_db;
+
+CREATE TABLE IF NOT EXISTS sinh_vien (
+    ma_sv VARCHAR(10) PRIMARY KEY,
+    ho_ten VARCHAR(255) NOT NULL,
+    ngay_sinh DATE NOT NULL,
+    nganh VARCHAR(10) NOT NULL,
+    dtb FLOAT NOT NULL,
+    lop_sh VARCHAR(50) NOT NULL
+);
